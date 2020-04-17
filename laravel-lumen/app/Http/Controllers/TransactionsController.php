@@ -87,4 +87,45 @@ class TransactionsController extends Controller {
 
         return response()->json([$arr_data], 200);
     }
+
+    public function cekSaldo(Request $request)
+    {
+
+        $account = Accounts::where('accountNumber', $request->account_number)->first();
+
+        if(!$account){
+            $result = false;
+            $message = "Account number not found";
+        }
+        else{
+
+            $transactions = Transactions::where('accountId', $account->id)->orderBy('id', 'asc')->get();
+
+            $balance = 0;
+            foreach($transactions AS $data){
+                if($data->type == "SIMPAN"){
+                    $balance += $data->amount;
+                }
+                else{
+                    $balance -= $data->amount;
+                }
+            }
+
+            $res_data = array();
+            $arr = array();
+            $arr['balance'] = $balance;
+            array_push($res_data, $arr);
+
+            $result = true;
+            $message = "Account found";
+        }
+
+        $arr_data = [
+            "status"        => $result,
+            "message"       => $message,
+            "data"          => $res_data
+        ];
+
+        return response()->json([$arr_data], 200);
+    }
 }
