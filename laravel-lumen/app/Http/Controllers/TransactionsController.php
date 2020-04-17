@@ -49,4 +49,42 @@ class TransactionsController extends Controller {
 
         return response()->json([$arr_data], 200);
     }
+
+    public function ambilUang(Request $request){
+        $result = false;
+        DB::beginTransaction();
+        try {
+
+            $account = Accounts::where('accountNumber', $request->account_number)->first();
+
+            if(!$account){
+                $result = false;
+                $message = "Account number not found";
+            }
+            else{
+
+                $transaction = Transactions::create([
+                    "accountId" => $account->id,
+                    "type"      => "AMBIL",
+                    "amount"    => $request->amount,
+                    "date"      => Carbon::parse($request->date),
+                ]);
+
+                $result = true;
+                $message = "Data saved successfully";
+            }
+        }
+        catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        DB::commit();
+
+        $arr_data = [
+            "status"        => $result,
+            "message"       => $message
+        ];
+
+        return response()->json([$arr_data], 200);
+    }
 }
