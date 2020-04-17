@@ -24,8 +24,6 @@ $router->post('user', 'UsersController@add');
 /**
  * Routes for resource transactions
  */
-$router->get('transactions', 'TransactionsController@all');
-$router->get('transactions/{id}', 'TransactionsController@get');
-$router->post('transactions', 'TransactionsController@add');
-$router->put('transactions/{id}', 'TransactionsController@put');
-$router->delete('transactions/{id}', 'TransactionsController@remove');
+$router->post('transactions/simpan', 'TransactionsController@simpanUang');
+$router->post('transactions/ambil', 'TransactionsController@ambilUang');
+$router->post('transactions/check', 'TransactionsController@cekSaldo');
