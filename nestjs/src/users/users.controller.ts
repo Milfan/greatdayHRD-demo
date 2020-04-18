@@ -5,7 +5,7 @@ import { User } from './users.decorator';
 import { Users } from './user.entity';
 import { UsersDTO } from './users.dto';
 
-@Controller('users')
+@Controller('api/users')
 export class UsersController {
     constructor(private service: UsersService) { }
 
